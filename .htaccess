@@ -1,0 +1,7 @@
+Allow from all
+
+DirectoryIndex index.php
+RewriteEngine on
+RewriteRule !\.(json|js|ico|gif|jpg|png|css)$ index.php
+
+php_flag phar.readonly 0
