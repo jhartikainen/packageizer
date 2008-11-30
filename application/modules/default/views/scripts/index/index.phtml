@@ -1,0 +1,11 @@
+<h1>Choose the library you want to use</h1>
+
+<ul>
+<?php foreach($this->libraries as $library): ?>
+	<li>
+		<a href="<?= $this->url(array('library'=>$library['id']), 'library', true); ?>">
+			<?= $library['name']; ?>
+		</a>
+	</li>
+<?php endforeach; ?>
+</ul>

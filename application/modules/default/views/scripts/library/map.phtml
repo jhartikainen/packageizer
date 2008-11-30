@@ -1,0 +1,44 @@
+<?php foreach($this->files as $filename => $data): ?>
+<div class="file">
+<h1><?= $filename; ?></h1>
+<?php if(count($data['requires']) > 0): ?>
+<h2>Requires</h2>
+<ul>
+<?php foreach($data['requires'] as $require): ?>
+	<li><?= $require; ?></li>
+<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+<?php if(count($data['interfaces']) > 0): ?>
+<h2>Interfaces</h2>
+<ul>
+<?php foreach($data['interfaces'] as $interface): ?>
+	<li><?= $interface; ?></li>
+<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+<?php if(count($data['classes']) > 0): ?>
+<h2>Classes</h2>
+<table>
+	<thead>
+		<tr>
+			<th>Class</th>
+			<th>Inherits</th>
+			<th>Implements</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach($data['classes'] as $class => $classData): ?>
+		<tr>
+			<td><?= $class; ?></td>
+			<td><?= $classData['extends']; ?></td>
+			<td><?= implode(', ', $classData['implements']); ?></td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
+<?php endif; ?>
+</div>
+<?php endforeach; ?>

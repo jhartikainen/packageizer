@@ -1,0 +1,12 @@
+<?php foreach($this->requires as $r): ?>
+<li><?= $r; ?></li>
+<?php endforeach; ?>
+
+<p>
+<?php if(extension_loaded('zip')): ?>
+<a href="<?= $this->url(array('class'=>$this->class, 'format'=>'zip','library'=>$this->library), 'library-packet'); ?>">Get .zip</a>
+<?php endif; ?>
+<?php if(extension_loaded('phar')): ?>
+<a href="<?= $this->url(array('class'=>$this->class, 'format'=>'phar','library'=>$this->library), 'library-packet'); ?>">Get .phar</a>
+<?php endif; ?>
+</p>

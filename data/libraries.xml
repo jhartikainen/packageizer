@@ -1,0 +1,8 @@
+<libraries>
+	<library name="Zend Framework 1.6 stable" 
+	         path="data/1.6" 
+	         id="1.6" />
+	<library name="Zend Framework 1.7 stable"
+		     path="data/1.7"
+			 id="1.7" />
+</libraries>

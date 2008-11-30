@@ -1,0 +1,106 @@
+<h1><?= $this->libraryName; ?></h1>
+
+<div id="treeContainer" class="dojo">
+<h2>Select classes from the tree</h2>
+<div id="tree"></div>
+</div>
+
+<div id="searchContainer" class="actions dojo">
+	<h2>...and download them and their dependencies</h2>
+	<form id="form" action="<?= $this->url(array('library'=>$this->library), 'library-packet-post'); ?>?time=<?= time(); ?>" method="post">
+	<fieldset>
+		<legend>Package format:</legend>
+		<input type="radio" name="format" value="zip" id="formatZip" /> <label for="formatZip">Zip</label>
+		<input type="radio" name="format" value="phar" id="formatPhar" /> <label for="formatPhar">PHP Archive (Phar)</label>
+	</fieldset>
+	<input type="hidden" name="classes" value="" />
+	<input type="submit" value="Get package" />
+	</form>
+	<div id="contents">
+		<h3>Package contents:</h3>
+	</div>
+</div>
+
+<div class="listContainer">
+<h2>Packages</h2>
+<ul id="list">
+<?php foreach($this->packages as $name => $data): ?>
+<li><a href="<?= $this->url(array('package'=>$name, 'parent'=>$this->package, 'library'=>$this->library), 'library-package');?>"><?= $name; ?></a></li>
+<?php endforeach; ?>
+</ul>
+</div>
+
+<div class="listContainer">
+<h2>Classes</h2>
+<ul id="list2">
+<?php foreach($this->classes as $class): ?>
+<li><a href="<?= $this->url(array('class'=>$class, 'library'=>$this->library), 'library-dependencies');?>"><?= $class; ?></a></li>
+<?php endforeach; ?>
+</ul>
+</div>
+<?php $this->inlineScript()->captureStart(); ?>
+dojo.require('dojox.data.QueryReadStore');
+dojo.require('dijit.TitlePane');
+
+dojo.addOnLoad(function() {
+	dojo.query('.listContainer').style({ display: 'none' });
+	dojo.query('.dojo').style({ display: 'block' });
+	var form = dojo.byId('form');
+	form.onsubmit = function() {
+		var classes = [];
+		var selected = dojo.query('.selected');
+		if(selected.length == 0)
+			return false;
+
+		for(var i = 0, len = selected.length; i < len; i++)
+		{
+			classes.push(selected[i].textContent);
+		}
+
+		form.classes.value = classes.join(',');
+	};
+
+	var store = new dojox.data.QueryReadStore({ url: '<?= $this->url(array('library'=>$this->library), 'library'); ?>' });
+	var model = new CU.dojo.QueryStoreModel({ 
+		store: store, 
+		query: { package: '', format: 'json' },  
+		rootId: 'treeRoot', 
+		rootLabel: 'Packages', 
+		childrenAttrs: 'children'
+	}, 'store');
+	var tree = new CU.dojo.ChkTree({ model: model }, 'tree');
+
+	dojo.connect(tree, 'onNodeUnchecked', function(node) {
+		dojo.removeClass(node.labelNode, 'selected');
+		try {
+		dijit.byId(node.labelNode.textContent).destroy();
+		} catch(e) {
+		}
+	});
+
+	dojo.connect(tree, 'onNodeChecked', function(node) {
+		var clazz = node.labelNode.innerHTML;
+		dojo.addClass(node.labelNode, 'selected');
+		var div = dojo.doc.createElement('div');
+		dojo.place(div, dojo.byId('contents'), 'last');
+		var panel = new dijit.TitlePane({ title: clazz, id: clazz, open: false, 'content': 'Loading dependencies...' }, div);
+		panel.startup();
+
+		dojo.xhrGet({
+			url: '<?= $this->url(array('class'=>'REPLACE','library'=>$this->library), 'library-dependencies'); ?>?format=json'.replace('REPLACE', clazz),
+			handleAs: 'json',
+			load: function(response, ioArgs) {
+				var pnl = dijit.byId(clazz);
+				if(!pnl)
+					return response;
+
+				pnl.attr('content', '<strong>Files included for ' + clazz + '</strong><br /><br />' + response.join('<br />'));
+				return response;
+			}
+		});
+
+	});
+
+	tree.startup();
+});
+<?php $this->inlineScript()->captureEnd(); ?>

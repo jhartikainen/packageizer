@@ -1,0 +1,74 @@
+<?= $this->doctype(Zend_View_Helper_Doctype::XHTML1_TRANSITIONAL); ?>
+<html>
+<head>
+	<title>Packageizer</title>
+ <style type="text/css">
+        @import "http://o.aolcdn.com/dojo/1.2.0/dijit/themes/tundra/tundra.css";
+        @import "http://o.aolcdn.com/dojo/1.2.0/dojo/resources/dojo.css"
+    </style>
+    <script type="text/javascript" src="http://o.aolcdn.com/dojo/1.2.0/dojo/dojo.xd.js" 
+        djConfig="parseOnLoad: true"></script>
+<?= $this->headScript(); ?>
+	<script type="text/javascript" src="/pack/js/CU/dojo.js"></script>
+ 	<style type="text/css">
+	body {
+		font-size: 12px;
+		font-family: Arial;
+	}
+
+	h1,h2 {
+		margin: 0;
+	}
+	
+	h2 {
+		border-bottom: 4px solid black;
+	}
+	
+	.dojo {
+		display: none;
+	}
+
+	.file {
+		background: cyan;
+		padding: 10px;
+		margin: 10px;
+	}
+
+	#treeContainer {
+		width: 50%;
+		float: left;
+		margin: 5px 0 0 0;
+	}
+
+	#searchContainer {
+		width: 50%;
+		float: right;
+		margin: 5px 0 0 0;
+	}
+
+	#tree { 
+		margin: 5px;
+	}
+
+	.dijitTreeIcon.class {
+		display: none;
+	}
+
+	.dijitTreeLabel.class {
+		margin-left: 0;
+	}
+
+	.dijitTreeRow input {
+		margin: 0 3px 0 4px;
+	}
+
+	.actions {
+		display: none;
+	}
+	</style>
+</head>
+<body class="tundra">
+	<?= $this->layout()->content; ?>
+	<?= $this->inlineScript(); ?>
+</body>
+</html>

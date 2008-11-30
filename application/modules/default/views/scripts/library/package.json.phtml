@@ -1,0 +1,45 @@
+<?php
+$packs = array();
+//put the data in a format for Dojo's dijit.Tree
+foreach($this->packages as $name => $data)
+{
+	$packs[] = array(
+		'name' => $name,
+		'label' => $name,
+		'parent' => $this->package,
+		'type' => 'package'
+	);
+}
+
+foreach($this->classes as $class)
+{
+	$packs[] = array(
+		'name' => $class,
+		'label' => $class,
+		'parent' => $this->package,
+		'type' => 'class'
+	);
+}
+usort($packs, 'dojosort');
+function dojosort($a, $b)
+{
+	if($a['type'] != $b['type'])
+	{
+		if($a['type'] == 'class' && $b['type'] == 'package')
+			return 1;
+		else
+			return -1;
+	}
+
+	if(strtolower($a['name']) < strtolower($b['name']))
+	{
+		return -1;
+	}
+	else return 1;
+}
+
+echo json_encode(array(
+	'numRows' => count($packs),
+	'items' => $packs,
+	'identity' => 'name'
+));
