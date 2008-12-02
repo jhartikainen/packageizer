@@ -1,0 +1,29 @@
+<?php echo '<?xml version="1.0"?>'; ?>
+<files>
+	<?php foreach($this->files as $filename => $data):?>
+	<file name="<?= $filename; ?>">
+		<requires>
+			<?php foreach($data['requires'] as $require): ?>
+			<require><?= $require; ?></require>
+			<?php endforeach; ?>
+		</requires>
+		<interfaces>
+			<?php foreach($data['interfaces'] as $interface): ?>
+			<interface><?= $interface; ?></interface>
+			<?php endforeach; ?>
+		</interfaces>
+		<classes>
+			<?php foreach($data['classes'] as $class => $classData): ?>
+			<class name="<?= $class; ?>">
+				<extends><?= $classData['extends']; ?></extends>
+				<implements>
+					<?php foreach($classData['implements'] as $impl): ?>
+					<interface><?= $impl; ?></interface>
+					<?php endforeach; ?>
+				</implements>
+			</class>
+			<?php endforeach; ?>
+		</classes>
+	</file>
+	<?php endforeach; ?>
+</files>
