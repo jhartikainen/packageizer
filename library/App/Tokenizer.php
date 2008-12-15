@@ -37,7 +37,7 @@ class App_Tokenizer
 			'end' => array('{')
 		),
 		T_DOC_COMMENT => array(
-			'end' => array(T_CLASS)
+			'end' => array(T_CLASS, T_REQUIRE, T_REQUIRE_ONCE, T_WHITESPACE)
 		)
 	);
 	
@@ -57,7 +57,13 @@ class App_Tokenizer
 			}
 			else if($this->_currentToken == null)
 			{
-				$this->_currentToken = $token[0];
+				if($token[0] != T_DOC_COMMENT)
+					$this->_currentToken = $token[0];
+				else
+				{
+					//Doc comments are "block" level so their data is available right away
+					$this->_tokenData[] = array('token' => T_DOC_COMMENT, 'data' => $token[1]);
+				}
 			}
 			else
 			{
